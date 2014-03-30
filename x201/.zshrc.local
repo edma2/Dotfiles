@@ -1,0 +1,37 @@
+# AUR functions
+aurup() {
+  for p in $(cower -u | awk '{ print $2 }'); do
+    echo "Installing from AUR: $p"
+    aurget $p
+  done
+}
+
+aurget() {
+  cower -df $1
+  pushd $HOME/src/$1
+  makepkg -i
+  popd
+}
+
+alias mplay='mplayer -msgmodule -msgcolor -aspect 16:9'
+alias pacup='sudo pacman -Syu && aurup'
+
+alias -s pdf=zathura\ --fork
+alias -s ps=zathura\ --fork
+alias -s png=feh
+alias -s jpg=feh
+alias -s gz=tar\ -xzvf
+alias -s bz2=tar\ -xjvf
+alias -s zip=unzip
+
+alias diff='grc diff'
+alias dig='grc dig'
+alias gcc='grc gcc'
+alias ifconfig='grc ifconfig'
+alias mount='grc mount'
+alias netstat='grc netstat'
+alias ping='grc ping'
+alias ps='grc ps'
+
+eval $(keychain --eval --quick --quiet id_rsa E5A9F109)
+eval `dircolors $HOME/src/dircolors-solarized/dircolors.ansi-universal`
