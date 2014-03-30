@@ -7,5 +7,3 @@ URxvt.perl-ext-common: default,matcher
 URxvt.url-launcher: chromium
 URxvt.urgentOnBell: true
 #include ".Xresources.d/solarized"
-
-dzen2*font: -*-tamsyn-medium-*-*-*-17-*-*-*-*-*-iso8859-*
