@@ -1,4 +1,0 @@
-bind CM-Return "urxvtc"
-mousebind MS-1 window_resize
-autogroup 1 Chromium
-ignore dzen2
