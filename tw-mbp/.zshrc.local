@@ -1,4 +1,2 @@
 jcurl() { curl -s $@ | jsonpp }
 jtwurl() { twurl $@ | jsonpp }
-
-source "`brew --prefix`/etc/grc.bashrc"
