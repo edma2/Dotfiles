@@ -82,7 +82,5 @@ let mapleader = ","
 
 " Toggle search highlighting
 nnoremap <silent><leader>c :set hlsearch! hlsearch?<CR>
-" Previous buffer
-nnoremap <leader><leader> :b#<cr>
 " Opens a new buffer with the current buffer's path
 nnoremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
