@@ -120,8 +120,8 @@ gitpwd() {
 cnprompt6() {
   case "$TERM" in
     xterm*|rxvt*)
-      precmd() {  print -Pn "\e]0;%m: %~\a" }
-      preexec() { printf "\e]0;$HOST: %s\a" $1 };;
+      precmd() {  print -Pn "\e]0;%~\a" }
+      preexec() { printf "\e]0;%s\a" $1 };;
   esac
   setopt PROMPT_SUBST
   nbsp=$'\u00A0'
