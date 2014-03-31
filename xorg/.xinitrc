@@ -1,5 +1,5 @@
 #!/bin/sh
-monitor-hotplug
+hotplug-monitor
 
 xrdb ~/.Xresources
 
