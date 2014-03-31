@@ -16,7 +16,7 @@ xset -b
 xset +fp /usr/share/fonts/local
 xset fp rehash
 
-xsetroot -solid black
+feh --bg-fill $HOME/pics/stars.jpg
 
 wmname LG3D
 
