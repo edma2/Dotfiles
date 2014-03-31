@@ -24,14 +24,5 @@ alias -s gz=tar\ -xzvf
 alias -s bz2=tar\ -xjvf
 alias -s zip=unzip
 
-alias diff='grc diff'
-alias dig='grc dig'
-alias gcc='grc gcc'
-alias ifconfig='grc ifconfig'
-alias mount='grc mount'
-alias netstat='grc netstat'
-alias ping='grc ping'
-alias ps='grc ps'
-
 eval $(keychain --eval --quick --quiet id_rsa E5A9F109)
 eval `dircolors $HOME/src/dircolors-solarized/dircolors.ansi-universal`
