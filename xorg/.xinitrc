@@ -1,5 +1,5 @@
 #!/bin/sh
-hotplug-monitor
+external-monitor
 
 xrdb ~/.Xresources
 
