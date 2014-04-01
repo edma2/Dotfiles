@@ -2,6 +2,7 @@
 	ui = true
 [user]
 	name = Eugene Ma
+	email = edma12123@gmail.com
 [push]
 	default = simple
 [init]
