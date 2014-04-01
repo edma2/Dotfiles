@@ -2,6 +2,7 @@
 	ui = true
 [user]
 	name = Eugene Ma
+	email = ema@twitter.com
 [push]
 	default = simple
 [init]
