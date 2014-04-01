@@ -1,0 +1,2 @@
+jcurl() { curl -s $@ | jsonpp }
+jtwurl() { twurl $@ | jsonpp }
