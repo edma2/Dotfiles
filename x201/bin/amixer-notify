@@ -1,9 +1,0 @@
-#!/bin/sh
-# Invoke volnoti with current volume state.
-MASTER=$(amixer get Master)
-
-if echo $MASTER | grep -q off; then
-  volnoti-show -m
-else
-  volnoti-show $(echo $MASTER | grep -o -P '\d+%')
-fi
