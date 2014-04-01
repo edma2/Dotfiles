@@ -1,3 +1,5 @@
+[core]
+	ignorecase = true
 [color]
 	ui = true
 [user]
