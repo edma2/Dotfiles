@@ -1,5 +1,0 @@
-XF86Audio{Mute,RaiseVolume,LowerVolume}
-  amixer sset Master {toggle,2+,2-} && amixer-notify
-
-XF86ScreenSaver
-  slock
