@@ -1,15 +1,16 @@
-setopt incappendhistory
-setopt sharehistory
-setopt extendedhistory
-setopt nobeep
 setopt autocd
-setopt correct
-setopt promptsubst
 setopt completeinword
-setopt interactivecomments
+setopt correct
 setopt extendedglob
-setopt pushd_silent
-setopt no_clobber
+setopt extendedhistory
+setopt globcomplete
+setopt incappendhistory
+setopt interactivecomments
+setopt nobeep
+setopt noclobber
+setopt promptsubst
+setopt pushdsilent
+setopt sharehistory
 
 HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000000
