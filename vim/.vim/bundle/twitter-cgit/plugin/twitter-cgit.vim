@@ -2,10 +2,9 @@
 function! s:Cgit(bang)
   let repo = substitute(system('basename `git rev-parse --show-toplevel`'), '\n$', '', '')
   let repo_root = substitute(system('git rev-parse --show-toplevel'), '\n$', '', '')
-  let branch = substitute(system('git rev-parse --abbrev-ref HEAD'), '\n$', '', '')
   let abs_path = expand("%:p")
   let rel_path = substitute(abs_path, '^'.repo_root.'/', '', '')
-  let url = 'https://cgit.twitter.biz/'.repo.'/tree/'.rel_path.'?h='.branch.'#n'.line(".")
+  let url = 'https://cgit.twitter.biz/'.repo.'/tree/'.rel_path.'#n'.line(".")
 
   if a:bang
     let @* = url 
