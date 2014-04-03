@@ -3,7 +3,7 @@
 " Maintainer: Eugene Ma <ema@twitter.com>
 " Last Change:
 
-if exists("current_compiler") || !executable("./pants")
+if exists("current_compiler")
   finish
 endif
 let current_compiler = "pants"
