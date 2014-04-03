@@ -1,15 +1,16 @@
-setopt incappendhistory
-setopt sharehistory
-setopt extendedhistory
-setopt nobeep
 setopt autocd
-setopt correct
-setopt promptsubst
 setopt completeinword
-setopt interactivecomments
+setopt correct
 setopt extendedglob
-setopt pushd_silent
-setopt no_clobber
+setopt extendedhistory
+setopt globcomplete
+setopt incappendhistory
+setopt interactivecomments
+setopt nobeep
+setopt noclobber
+setopt promptsubst
+setopt pushdsilent
+setopt sharehistory
 
 HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000000
@@ -94,6 +95,7 @@ bindkey -M viins "^xe" edit-command-line
 bindkey -M vicmd "^xe" edit-command-line
 
 autoload -U colors && colors
+
 # Stolen from http://chneukirchen.org/dotfiles/.zshrc
 # gitpwd - print %~, limited to $NDIR segments, with inline git branch
 NDIRS=2
@@ -126,7 +128,8 @@ cnprompt6() {
   setopt PROMPT_SUBST
   nbsp=$'\u00A0'
   bindkey -s $nbsp '^u'
-  PS1='%B%(?..%?? )%(1j.%j& .)%b$(gitpwd)%B%(!.%F{red}.%F{magenta}) %#$nbsp%f%b'
+  #PS1='%B%m%(?.. %??)%(1j. %j&.)%b $(gitpwd)%B%(!.%F{red}.%F{yellow})%#${SSH_CLIENT:+%#}$nbsp%b'
+  PS1='%B%(?..%?? )%(1j.%j& .)%b$(gitpwd)%B%(!.%F{red}.%F{yellow})%#${SSH_CLIENT:+%#}$nbsp%b%f'
   RPROMPT=''
 }
 
