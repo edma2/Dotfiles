@@ -12,7 +12,7 @@ if exists(":CompilerSet") != 2		" older Vim always used :setlocal
   command -nargs=* CompilerSet setlocal <args>
 endif
 
-CompilerSet makeprg=./pants\ goal\ compile\ $*\ \\\|\ nocolor
+CompilerSet makeprg=./pants\ goal\ compile\ $*\ \\|\ nocolor
 
 CompilerSet errorformat=%E\ %#[error]\ %f:%l:\ %m,%C\ %#[error]\ %p^,%-C%.%#,%Z,
                        \%W\ %#[warn]\ %f:%l:\ %m,%C\ %#[warn]\ %p^,%-C%.%#,%Z,
