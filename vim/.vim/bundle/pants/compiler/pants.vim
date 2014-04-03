@@ -3,8 +3,7 @@
 " Maintainer: Eugene Ma <ema@twitter.com>
 " Last Change:
 
-" TODO: check if pants binary exists
-if exists("current_compiler")
+if exists("current_compiler") || !executable("./pants")
   finish
 endif
 let current_compiler = "pants"
