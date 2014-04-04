@@ -134,6 +134,7 @@ let s:repl = {"requires": {}}
 if !exists('s:repls')
   let s:repls = []
   let s:repl_paths = {}
+  let s:repl_portfiles = {}
 endif
 
 function! s:repl.user_ns() abort
@@ -236,6 +237,34 @@ endfunction
 function! s:unregister_connection(conn) abort
   call filter(s:repl_paths, 'v:val.connection.transport isnot# a:conn.transport')
   call filter(s:repls, 'v:val.connection.transport isnot# a:conn.transport')
+  call filter(s:repl_portfiles, 'v:val.connection.transport isnot# a:conn.transport')
+endfunction
+
+function! s:register_portfile(portfile, ...) abort
+  let old = get(s:repl_portfiles, a:portfile, {})
+  if has_key(old, 'time') && getftime(a:portfile) !=# old.time
+    call s:unregister_connection(old.connection)
+    let old = {}
+  endif
+  if empty(old) && getfsize(a:portfile) > 0
+    let port = matchstr(readfile(a:portfile, 'b', 1)[0], '\d\+')
+    let s:repl_portfiles[a:portfile] = {'time': getftime(a:portfile)}
+    try
+      let conn = nrepl#fireplace_connection#open(port)
+      let s:repl_portfiles[a:portfile].connection = conn
+      call s:register_connection(conn, a:0 ? a:1 : '')
+      return conn
+    catch /^nREPL Connection Error:/
+      if &verbose
+        echohl WarningMSG
+        echomsg v:exception
+        echohl None
+      endif
+      return {}
+    endtry
+  else
+    return get(old, 'connection', {})
+  endif
 endfunction
 
 " }}}1
@@ -388,16 +417,14 @@ function! s:oneoff.path() dict abort
 endfunction
 
 function! s:oneoff.eval(expr, options) dict abort
-  if &verbose && !empty(get(a:options, 'session', 1))
-    echohl WarningMSG
-    echomsg "No REPL found. Running java clojure.main ..."
-    echohl None
+  if !empty(get(a:options, 'session', 1))
+    throw 'Fireplace: no live REPL connection'
   endif
   return s:spawning_eval(self.classpath, a:expr, get(a:options, 'ns', self.user_ns()))
 endfunction
 
 function! s:oneoff.message(...) abort
-  throw 'No live REPL connection'
+  throw 'Fireplace: no live REPL connection'
 endfunction
 
 let s:oneoff.piggieback = s:oneoff.message
@@ -439,7 +466,18 @@ function! fireplace#path(...) abort
 endfunction
 
 function! fireplace#platform(...) abort
+  for [k, v] in items(s:repl_portfiles)
+    if getftime(k) != v.time
+      call s:unregister_connection(v.connection)
+    endif
+  endfor
+
+  let portfile = findfile('.nrepl-port', '.;')
+  if !empty(portfile)
+    call s:register_portfile(portfile, fnamemodify(portfile, ':h'))
+  endif
   silent doautocmd User FireplacePreConnect
+
   let buf = a:0 ? a:1 : s:buf()
   let root = simplify(fnamemodify(bufname(buf), ':p:s?[\/]$??'))
   let previous = ""
@@ -459,7 +497,7 @@ function! fireplace#platform(...) abort
     let cp = classpath#from_vim(getbufvar(buf, '&path'))
     return extend({'classpath': cp, 'nr': bufnr(buf)}, s:oneoff)
   endif
-  throw ':Connect to a REPL or install classpath.vim to evaluate code'
+  throw 'Fireplace: :Connect to a REPL or install classpath.vim'
 endfunction
 
 function! fireplace#client(...) abort
@@ -467,7 +505,7 @@ function! fireplace#client(...) abort
   let client = fireplace#platform(buf)
   if fnamemodify(bufname(buf), ':e') ==# 'cljs'
     if !has_key(client, 'connection')
-      throw ':Connect to a REPL to evaluate code'
+      throw 'Fireplace: no live REPL connection'
     endif
     if empty(client.piggiebacks)
       let result = client.piggieback('')
@@ -643,6 +681,10 @@ function! fireplace#echo_session_eval(expr, ...) abort
   try
     echo fireplace#session_eval(a:expr, a:0 ? a:1 : {})
   catch /^Clojure:/
+  catch
+    echohl ErrorMSG
+    echomsg v:exception
+    echohl NONE
   endtry
   return ''
 endfunction
@@ -731,7 +773,10 @@ endfunction
 
 function! s:filterop(type) abort
   let reg_save = @@
+  let sel_save = &selection
+  let cb_save = &clipboard
   try
+    set selection=inclusive clipboard-=unnamed clipboard-=unnamedplus
     let expr = s:opfunc(a:type)
     let @@ = matchstr(expr, '^\n\+').fireplace#session_eval(expr).matchstr(expr, '\n\+$')
     if @@ !~# '^\n*$'
@@ -741,6 +786,8 @@ function! s:filterop(type) abort
     return ''
   finally
     let @@ = reg_save
+    let &selection = sel_save
+    let &clipboard = cb_save
   endtry
 endfunction
 
@@ -1056,6 +1103,7 @@ function! s:Edit(cmd, keyword) abort
   endtry
   if location !=# ''
     if matchstr(location, '^+\d\+ \zs.*') ==# fnameescape(expand('%:p')) && a:cmd ==# 'edit'
+      normal! m'
       return matchstr(location, '\d\+')
     else
       return a:cmd.' '.location.'|let &l:path = '.string(&l:path)
@@ -1312,13 +1360,13 @@ if !exists('s:leiningen_repls')
   let s:leiningen_paths = {}
 endif
 
-function! s:portfile() abort
+function! s:leiningen_portfile() abort
   if !exists('b:leiningen_root')
     return ''
   endif
 
   let root = b:leiningen_root
-  let portfiles = [root.'/target/repl-port', root.'/target/repl/repl-port', root.'/.nrepl-port']
+  let portfiles = [root.'/.nrepl-port', root.'/target/repl-port', root.'/target/repl/repl-port']
 
   for f in portfiles
     if filereadable(f)
@@ -1328,7 +1376,6 @@ function! s:portfile() abort
   return ''
 endfunction
 
-
 function! s:leiningen_connect() abort
   for [k, v] in items(s:leiningen_repls)
     if getfsize(v.file) <= 0
@@ -1337,26 +1384,13 @@ function! s:leiningen_connect() abort
     endif
   endfor
 
-  let portfile = s:portfile()
+  let portfile = s:leiningen_portfile()
   if empty(portfile)
     return
   endif
-
-  if getfsize(portfile) > 0 && getftime(portfile) !=# get(get(s:leiningen_repls, b:leiningen_root, {}), 'time', -1)
-    let port = matchstr(readfile(portfile, 'b', 1)[0], '\d\+')
-    let s:leiningen_repls[b:leiningen_root] = {'time': getftime(portfile), 'file': portfile}
-    try
-      let conn = nrepl#fireplace_connection#open(port)
-      let s:leiningen_repls[b:leiningen_root].connection = conn
-      call s:register_connection(conn, b:leiningen_root)
-      let s:leiningen_paths[b:leiningen_root] = conn.path()
-    catch /^nREPL Connection Error:/
-      if &verbose
-        echohl WarningMSG
-        echomsg v:exception
-        echohl None
-      endif
-    endtry
+  let conn = s:register_portfile(portfile, b:leiningen_root)
+  if has_key(conn, 'path')
+    let s:leiningen_paths[b:leiningen_root] = conn.path()
   endif
 endfunction
 

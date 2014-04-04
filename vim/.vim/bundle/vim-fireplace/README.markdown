@@ -32,19 +32,19 @@ This list isn't exhaustive; see the `:help` for details.
 ### Transparent setup
 
 Fireplace.vim talks to nREPL.  With Leiningen, it connects automatically based
-on `target/repl-port`, otherwise it's just a `:Connect` away.  You can connect
-to multiple instances of nREPL for different projects, and it will use the
-right one automatically.  ClojureScript support is just as seamless with
+on `.nrepl-port`, otherwise it's just a `:Connect` away.  You can connect to
+multiple instances of nREPL for different projects, and it will use the right
+one automatically.  ClojureScript support is just as seamless with
 [Piggieback][].
 
 The only external dependency is that you have either a Vim with Python support
 compiled in, or `python` in your path.
 
 Oh, and if you don't have an nREPL connection, installing [classpath.vim][]
-lets it fall back to using `java clojure.main`, using a class path based on
-your Leiningen or Maven config.  It's a bit slow, but a two-second delay is
-vastly preferable to being forced out of my flow for a single command, in my
-book.
+lets it fall back to using `java clojure.main` for some of the basics, using a
+class path based on your Leiningen or Maven config.  It's a bit slow, but a
+two-second delay is vastly preferable to being forced out of my flow for a
+single command, in my book.
 
 [Piggieback]: https://github.com/cemerick/piggieback
 [classpath.vim]: https://github.com/tpope/vim-classpath
