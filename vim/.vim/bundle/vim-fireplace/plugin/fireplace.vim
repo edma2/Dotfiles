@@ -1045,13 +1045,15 @@ augroup END
 " }}}1
 " :Require {{{1
 
-function! s:Require(bang, ns) abort
+function! s:Require(bang, echo, ns) abort
   if expand('%:e') ==# 'cljs'
     let cmd = '(load-file '.s:str(tr(a:ns ==# '' ? fireplace#ns() : a:ns, '-.', '_/').'.cljs').')'
   else
     let cmd = ('(clojure.core/require '.s:qsym(a:ns ==# '' ? fireplace#ns() : a:ns).' :reload'.(a:bang ? '-all' : '').')')
   endif
-  echo cmd
+  if a:echo
+    echo cmd
+  endif
   try
     call fireplace#session_eval(cmd)
     return ''
@@ -1060,9 +1062,19 @@ function! s:Require(bang, ns) abort
   endtry
 endfunction
 
+function! s:cpr() abort
+  let echo = "(require ".fireplace#ns().' :reload) (clojure.test/run-tests)'
+  try
+    call s:Require(0, 0, '')
+  catch /^Fireplace: no live REPL connection$/
+  endtry
+  call s:RunTests(0, 0)
+  echo echo
+endfunction
+
 function! s:setup_require() abort
-  command! -buffer -bar -bang -complete=customlist,fireplace#ns_complete -nargs=? Require :exe s:Require(<bang>0, <q-args>)
-  nnoremap <silent><buffer> cpr :Require<CR>
+  command! -buffer -bar -bang -complete=customlist,fireplace#ns_complete -nargs=? Require :exe s:Require(<bang>0, 1, <q-args>)
+  nnoremap <silent><buffer> cpr :if expand('%:e') ==# 'cljs'<Bar>Require<Bar>else<Bar>call <SID>cpr()<Bar>endif<CR>
 endfunction
 
 augroup fireplace_require
@@ -1298,6 +1310,72 @@ augroup fireplace_doc
 augroup END
 
 " }}}1
+" Tests {{{1
+
+function! fireplace#capture_test_run(expr) abort
+  let expr = '(require ''clojure.test) '
+        \ . '(binding [clojure.test/report (fn [m]'
+        \ .  ' (case (:type m)'
+        \ .    ' (:fail :error)'
+        \ .    ' (let [{file :file test :name} (meta (last clojure.test/*testing-vars*))]'
+        \ .      ' (clojure.test/with-test-out'
+        \ .        ' (println (clojure.string/join "\t" [file (:line m) (name (:type m)) test]))'
+        \ .        ' (when (seq clojure.test/*testing-contexts*) (println (clojure.test/testing-contexts-str)))'
+        \ .        ' (when-let [message (:message m)] (println message))'
+        \ .        ' (println "expected:" (pr-str (:expected m)))'
+        \ .        ' (println "  actual:" (pr-str (:actual m)))))'
+        \ .    ' ((.getRawRoot #''clojure.test/report) m)))]'
+        \ . ' ' . a:expr . ')'
+  let qflist = []
+  let response = s:eval(expr, {'session': 0})
+  if !has_key(response, 'out')
+    return s:output_response(response)
+  endif
+  for line in split(response.out, "\n")
+    let entry = {'text': line}
+    if line =~# '\t.*\t.*\t'
+      let [resource, lnum, type, name] = split(line, "\t", 1)
+      let entry.lnum = lnum
+      let entry.type = (type ==# 'fail' ? 'W' : 'E')
+      let entry.text = name
+      if resource ==# 'NO_SOURCE_FILE'
+        let resource = ''
+        let entry.lnum = 0
+      endif
+      let entry.filename = fireplace#findresource(resource, fireplace#path())
+      if empty(entry.filename)
+        let entry.lnum = 0
+      endif
+    endif
+    call add(qflist, entry)
+  endfor
+  call setqflist(qflist)
+  cwindow
+endfunction
+
+function! s:RunTests(bang, echo, ...) abort
+  if a:bang && a:0
+    let expr = '(clojure.test/run-all-tests #"'.join(a:000, '|').'")'
+  elseif a:bang
+    let expr = '(clojure.test/run-all-tests)'
+  else
+    let expr = '(' .join(['clojure.test/run-tests'] + map(copy(a:000), '"''".v:val'), ' ').')'
+  endif
+  call fireplace#capture_test_run(expr)
+  cwindow
+  if a:echo
+    echo expr
+  endif
+endfunction
+
+augroup fireplace_command
+  autocmd!
+  autocmd FileType clojure command! -buffer -bar -bang -nargs=*
+        \ -complete=customlist,fireplace#ns_complete RunTests
+        \ call s:RunTests(<bang>0, 1, <f-args>)
+augroup END
+
+" }}}1
 " Alternate {{{1
 
 augroup fireplace_alternate
@@ -1355,8 +1433,7 @@ function! s:hunt(start, anchor, pattern) abort
   return ''
 endfunction
 
-if !exists('s:leiningen_repls')
-  let s:leiningen_repls = {}
+if !exists('s:leiningen_paths')
   let s:leiningen_paths = {}
 endif
 
@@ -1376,15 +1453,32 @@ function! s:leiningen_portfile() abort
   return ''
 endfunction
 
-function! s:leiningen_connect() abort
-  for [k, v] in items(s:leiningen_repls)
-    if getfsize(v.file) <= 0
-      call remove(s:leiningen_repls, k)
-      call s:unregister_connection(v.connection)
-    endif
-  endfor
-
+function! s:leiningen_connect(auto) abort
+  if !exists('b:leiningen_root')
+    return
+  endif
   let portfile = s:leiningen_portfile()
+  if a:auto && empty(portfile) && exists(':Start') ==# 2
+
+    let cd = has('*haslocaldir') && haslocaldir() ? 'lcd' : 'cd'
+    let cwd = getcwd()
+    try
+      execute cd fnameescape(b:leiningen_root)
+      Start! -title=lein\ repl lein repl
+      if get(get(g:, 'dispatch_last_start', {}), 'handler', 'headless') ==# 'headless'
+        return
+      endif
+    finally
+      execute cd fnameescape(cwd)
+    endtry
+
+    let i = 0
+    while empty(portfile) && i < 300 && !getchar(0)
+      let i += 1
+      sleep 100m
+      let portfile = s:leiningen_portfile()
+    endwhile
+  endif
   if empty(portfile)
     return
   endif
@@ -1413,7 +1507,7 @@ function! s:leiningen_init() abort
   if exists('*classpath#from_vim')
     let s:leiningen_paths[b:leiningen_root] = classpath#split(classpath#from_vim(&path))
   endif
-  call s:leiningen_connect()
+  call s:leiningen_connect(0)
 endfunction
 
 function! s:massage_quickfix() abort
@@ -1434,7 +1528,7 @@ endfunction
 
 augroup fireplace_leiningen
   autocmd!
-  autocmd User FireplacePreConnect call s:leiningen_connect()
+  autocmd User FireplacePreConnect call s:leiningen_connect(1)
   autocmd FileType clojure call s:leiningen_init()
   autocmd QuickFixCmdPost make,cfile,cgetfile call s:massage_quickfix()
 augroup END
