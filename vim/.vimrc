@@ -78,7 +78,7 @@ au BufRead,BufNewFile *.aurora,*.mesos,BUILD set filetype=python
 au BufRead,BufNewFile *.alert set filetype=conf
 au BufRead,BufNewFile Capfile set filetype=ruby
 
-let mapleader = ","
+let mapleader = "\<Space>"
 
 " Toggle search highlighting
 nnoremap <silent><leader>c :set hlsearch! hlsearch?<CR>
