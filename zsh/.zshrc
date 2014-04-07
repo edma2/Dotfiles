@@ -104,7 +104,7 @@ setprompt() {
 
 git_prompt_info() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "%B%F{magenta}${ref#refs/heads/}%f%b "
+  echo "%B%F{yellow}${ref#refs/heads/}%f%b "
 }
 
 setprompt
