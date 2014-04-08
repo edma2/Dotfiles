@@ -31,8 +31,30 @@ alias gm="git merge"
 alias gmm="git merge master"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gs="git status"
-alias gr='cd $(git rev-parse --show-toplevel)'
 alias gp="git pull"
+
+# cd with no arguments to root if in a git repo
+_git_cd() {
+  if [[ "$1" != "" ]]; then
+    cd "$@"
+  else
+    local OUTPUT
+    OUTPUT="$(git rev-parse --show-toplevel 2>/dev/null)"
+    if [[ -e "$OUTPUT" ]]; then
+      if [[ "$OUTPUT" != "$(pwd)" ]]; then
+        cd "$OUTPUT"
+      else
+        cd
+      fi
+    else
+      cd
+    fi
+  fi
+}
+
+if hash git 2>/dev/null; then
+  alias cd=_git_cd
+fi
 
 case `uname` in
   FreeBSD)
