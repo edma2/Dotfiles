@@ -26,8 +26,3 @@ alias -s zip=unzip
 
 eval $(keychain --eval --quick --quiet id_rsa E5A9F109)
 eval `dircolors $HOME/src/dircolors-solarized/dircolors.ansi-universal`
-
-fpath=( "$HOME/.zfunctions" $fpath )
-
-autoload -U promptinit && promptinit
-prompt pure
