@@ -1,5 +1,5 @@
-URxvt*font: -*-terminus-medium-*-*-*-14-*-*-*-*-*-*-*
-URxvt*boldFont: -*-terminus-medium-*-*-*-14-*-*-*-*-*-*-*
+URxvt*font: xft:Droid Sans Mono:pixelsize=14
+URxvt.letterSpace: -1
 URxvt*internalBorder: 3
 URxvt.scrollBar: false
 URxvt.loginShell: true
