@@ -117,18 +117,30 @@ bindkey -M vicmd "^xe" edit-command-line
 
 autoload -U colors && colors
 
-setprompt() {
-  nbsp=$'\u00A0'
-  bindkey -s $nbsp '^u'
-  PROMPT='%c%F{black}/%f$(git_prompt_info)%#$nbsp'
+# gitpwd - print %~, limited to $NDIR segments, with inline git branch
+NDIRS=2
+gitpwd() {
+  local -a segs splitprefix; local prefix branch
+  segs=("${(Oas:/:)${(D)PWD}}")
+
+  if gitprefix=$(git rev-parse --show-prefix 2>/dev/null); then
+    splitprefix=("${(s:/:)gitprefix}")
+    if ! branch=$(git symbolic-ref -q --short HEAD); then
+      branch=$(git name-rev --name-only HEAD 2>/dev/null)
+      [[ $branch = *\~* ]] || branch+="~0"    # distinguish detached HEAD
+    fi
+    if (( $#splitprefix > NDIRS )); then
+      print -n "${segs[$#splitprefix]}@$branch "
+    else
+      segs[$#splitprefix]+=@$branch
+    fi
+  fi
+
+  print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
 }
 
-git_prompt_info() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "%B%F{magenta}${ref#refs/heads/}%f%b "
-}
-
-setprompt
+PS1='%(?.%F{green}.%F{red})%#%f '
+RPS1='[%B%F{magenta}$(gitpwd)%f%b]'
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
