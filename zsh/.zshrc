@@ -3,7 +3,6 @@ setopt completeinword
 setopt correct
 setopt extendedglob
 setopt extendedhistory
-setopt globcomplete
 setopt incappendhistory
 setopt interactivecomments
 setopt nobeep
