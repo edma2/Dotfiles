@@ -31,8 +31,30 @@ alias gm="git merge"
 alias gmm="git merge master"
 alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gs="git status"
-alias gr='cd $(git rev-parse --show-toplevel)'
 alias gp="git pull"
+
+# cd with no arguments to root if in a git repo
+_git_cd() {
+  if [[ "$1" != "" ]]; then
+    cd "$@"
+  else
+    local OUTPUT
+    OUTPUT="$(git rev-parse --show-toplevel 2>/dev/null)"
+    if [[ -e "$OUTPUT" ]]; then
+      if [[ "$OUTPUT" != "$(pwd -P)" ]]; then
+        cd "$OUTPUT"
+      else
+        cd
+      fi
+    else
+      cd
+    fi
+  fi
+}
+
+if hash git 2>/dev/null; then
+  alias cd=_git_cd
+fi
 
 case `uname` in
   FreeBSD)
@@ -96,44 +118,18 @@ bindkey -M vicmd "^xe" edit-command-line
 
 autoload -U colors && colors
 
-# Stolen from http://chneukirchen.org/dotfiles/.zshrc
-# gitpwd - print %~, limited to $NDIR segments, with inline git branch
-NDIRS=2
-gitpwd() {
-  local -a segs splitprefix; local prefix branch
-  segs=("${(Oas:/:)${(D)PWD}}")
-
-  if gitprefix=$(git rev-parse --show-prefix 2>/dev/null); then
-    splitprefix=("${(s:/:)gitprefix}")
-    if ! branch=$(git symbolic-ref -q --short HEAD); then
-      branch=$(git name-rev --name-only HEAD 2>/dev/null)
-      [[ $branch = *\~* ]] || branch+="~0"    # distinguish detached HEAD
-    fi
-    if (( $#splitprefix > NDIRS )); then
-      print -n "${segs[$#splitprefix]}@$branch "
-    else
-      segs[$#splitprefix]+=@$branch
-    fi
-  fi
-
-  print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
-}
-
-cnprompt6() {
-  case "$TERM" in
-    xterm*|rxvt*)
-      precmd() {  print -Pn "\e]0;%~\a" }
-      preexec() { printf "\e]0;%s\a" $1 };;
-  esac
-  setopt PROMPT_SUBST
+setprompt() {
   nbsp=$'\u00A0'
   bindkey -s $nbsp '^u'
-  #PS1='%B%m%(?.. %??)%(1j. %j&.)%b $(gitpwd)%B%(!.%F{red}.%F{yellow})%#${SSH_CLIENT:+%#}$nbsp%b'
-  PS1='%B%(?..%?? )%(1j.%j& .)%b$(gitpwd)%B%(!.%F{red}.%F{yellow})%#${SSH_CLIENT:+%#}$nbsp%b%f'
-  RPROMPT=''
+  PROMPT='%c%F{black}/%f$(git_prompt_info)%#$nbsp'
 }
 
-cnprompt6
+git_prompt_info() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo "%B%F{magenta}${ref#refs/heads/}%f%b "
+}
+
+setprompt
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local

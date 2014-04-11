@@ -80,6 +80,8 @@ au BufRead,BufNewFile Capfile set filetype=ruby
 
 let mapleader = "\<Space>"
 
+" Previous buffer
+nnoremap <leader><leader> :b#<cr>
 " Toggle search highlighting
 nnoremap <silent><leader>c :set hlsearch! hlsearch?<CR>
 " Opens a new buffer with the current buffer's path
@@ -90,3 +92,5 @@ nnoremap <silent><leader>gd :Git! diff<cr>
 nnoremap <silent><leader>gs :Gstatus<cr>
 " Git grep
 nnoremap <leader>gg :Ggrep<space>
+" Git blame
+nnoremap <silent><leader>gb :Gblame<cr>
