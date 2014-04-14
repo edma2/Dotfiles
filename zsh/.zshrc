@@ -139,10 +139,15 @@ gitpwd() {
   print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
 }
 
-# Remove prompt on line paste (cf. last printed char in cnprompt6).
+# Remove prompt on line paste
 nbsp=$'\u00A0'
 bindkey -s $nbsp '^u'
-PROMPT='%B%F{magenta}$(gitpwd)%(?.%F{magenta}.%F{red})%#%f%b$nbsp'
+PROMPT='%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
+
+_git_head() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo "%F{blue}${ref#refs/heads/}%f"
+}
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
