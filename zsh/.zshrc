@@ -139,7 +139,10 @@ gitpwd() {
   print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
 }
 
-PROMPT='%F{white}[%B%F{magenta}$(gitpwd)%F{white}]%F{white}--%B%F{magenta}» %f%b'
+# Remove prompt on line paste (cf. last printed char in cnprompt6).
+nbsp=$'\u00A0'
+bindkey -s $nbsp '^u'
+PROMPT='%B%F{magenta}$(gitpwd)%(?.%F{magenta}.%F{red})%#%f%b$nbsp'
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
