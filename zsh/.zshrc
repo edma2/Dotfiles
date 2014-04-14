@@ -139,8 +139,7 @@ gitpwd() {
   print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
 }
 
-PS1='%(?.%F{green}.%F{red})%#%f '
-RPS1='[%B%F{magenta}$(gitpwd)%f%b]'
+PROMPT='%F{white}[%B%F{magenta}$(gitpwd)%F{white}]%F{white}--%B%F{magenta}» %f%b'
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
