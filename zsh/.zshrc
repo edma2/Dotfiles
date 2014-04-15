@@ -1,15 +1,4 @@
-setopt autocd
-setopt completeinword
-setopt correct
-setopt extendedglob
-setopt extendedhistory
-setopt incappendhistory
-setopt interactivecomments
-setopt nobeep
-setopt noclobber
-setopt promptsubst
-setopt pushdsilent
-setopt sharehistory
+setopt autocd completeinword correct extendedglob extendedhistory incappendhistory interactivecomments nobeep noclobber promptsubst pushdsilent sharehistory
 
 HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000000
@@ -28,7 +17,6 @@ alias gd="git diff"
 alias gdm="git diff master"
 alias gm="git merge"
 alias gmm="git merge master"
-alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gs="git status"
 alias gp="git pull"
 
@@ -51,7 +39,7 @@ _git_cd() {
   fi
 }
 
-if hash git 2>/dev/null; then
+if command -v git >/dev/null; then
   alias cd=_git_cd
 fi
 
@@ -75,18 +63,6 @@ esac
 
 alias vi='vim'
 alias e='exit'
-
-##
-# streams
-##
-#
-_stations=(groovesalad cliqhop spacestream missioncontrol secretagent christmas dronezone)
-
-stations() { for s in $_stations; do echo $s; done }
-
-for s in $_stations; do
-  alias $s="mpg123 -Cq http://ice.somafm.com/$s"
-done
 
 autoload -U compinit && compinit
 zstyle ':completion:*' completer _complete _match _approximate
