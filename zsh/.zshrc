@@ -3,7 +3,6 @@ setopt completeinword
 setopt correct
 setopt extendedglob
 setopt extendedhistory
-setopt globcomplete
 setopt incappendhistory
 setopt interactivecomments
 setopt nobeep
@@ -140,8 +139,10 @@ gitpwd() {
   print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
 }
 
-PS1='%(?.%F{green}.%F{red})%#%f '
-RPS1='[%B%F{magenta}$(gitpwd)%f%b]'
+# Remove prompt on line paste (cf. last printed char in cnprompt6).
+nbsp=$'\u00A0'
+bindkey -s $nbsp '^u'
+PROMPT='%B%F{magenta}$(gitpwd)%(?.%F{magenta}.%F{red})%#%f%b$nbsp'
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
