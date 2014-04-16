@@ -62,7 +62,6 @@ case `uname` in
 esac
 
 alias vi='vim'
-alias e='exit'
 
 autoload -U compinit && compinit
 zstyle ':completion:*' completer _complete _match _approximate
