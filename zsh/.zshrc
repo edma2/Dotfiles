@@ -1,15 +1,4 @@
-setopt autocd
-setopt completeinword
-setopt correct
-setopt extendedglob
-setopt extendedhistory
-setopt incappendhistory
-setopt interactivecomments
-setopt nobeep
-setopt noclobber
-setopt promptsubst
-setopt pushdsilent
-setopt sharehistory
+setopt autocd completeinword correct extendedglob extendedhistory incappendhistory interactivecomments nobeep noclobber promptsubst pushdsilent sharehistory
 
 HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000000
@@ -28,7 +17,6 @@ alias gd="git diff"
 alias gdm="git diff master"
 alias gm="git merge"
 alias gmm="git merge master"
-alias gl="git log --color --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr)%C(bold blue)<%an>%Creset' --abbrev-commit"
 alias gs="git status"
 alias gp="git pull"
 
@@ -51,7 +39,7 @@ _git_cd() {
   fi
 }
 
-if hash git 2>/dev/null; then
+if command -v git >/dev/null; then
   alias cd=_git_cd
 fi
 
@@ -74,19 +62,6 @@ case `uname` in
 esac
 
 alias vi='vim'
-alias e='exit'
-
-##
-# streams
-##
-#
-_stations=(groovesalad cliqhop spacestream missioncontrol secretagent christmas dronezone)
-
-stations() { for s in $_stations; do echo $s; done }
-
-for s in $_stations; do
-  alias $s="mpg123 -Cq http://ice.somafm.com/$s"
-done
 
 autoload -U compinit && compinit
 zstyle ':completion:*' completer _complete _match _approximate
@@ -117,32 +92,15 @@ bindkey -M vicmd "^xe" edit-command-line
 
 autoload -U colors && colors
 
-# gitpwd - print %~, limited to $NDIR segments, with inline git branch
-NDIRS=2
-gitpwd() {
-  local -a segs splitprefix; local prefix branch
-  segs=("${(Oas:/:)${(D)PWD}}")
-
-  if gitprefix=$(git rev-parse --show-prefix 2>/dev/null); then
-    splitprefix=("${(s:/:)gitprefix}")
-    if ! branch=$(git symbolic-ref -q --short HEAD); then
-      branch=$(git name-rev --name-only HEAD 2>/dev/null)
-      [[ $branch = *\~* ]] || branch+="~0"    # distinguish detached HEAD
-    fi
-    if (( $#splitprefix > NDIRS )); then
-      print -n "${segs[$#splitprefix]}@$branch "
-    else
-      segs[$#splitprefix]+=@$branch
-    fi
-  fi
-
-  print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
-}
-
-# Remove prompt on line paste (cf. last printed char in cnprompt6).
+# Remove prompt on line paste
 nbsp=$'\u00A0'
 bindkey -s $nbsp '^u'
-PROMPT='%B%F{magenta}$(gitpwd)%(?.%F{magenta}.%F{red})%#%f%b$nbsp'
+PROMPT='%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
+
+_git_head() {
+  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
+  echo "%F{blue}${ref#refs/heads/}%f"
+}
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
