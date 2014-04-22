@@ -7,6 +7,7 @@ call vundle#rc()
 Plugin 'altercation/vim-colors-solarized'
 Plugin 'derekwyatt/vim-scala'
 Plugin 'gmarik/vundle'
+Plugin 'godlygeek/tabular'
 Plugin 'sprsquish/thrift.vim'
 Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
