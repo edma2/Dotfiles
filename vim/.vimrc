@@ -1,6 +1,14 @@
 set nocompatible
+filetype off
 
-call pathogen#infect()
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+
+Plugin 'sprsquish/thrift.vim'
+Plugin 'tpope/vim-fireplace'
+Plugin 'tpope/vim-fugitive'
+Plugin 'tpope/vim-unimpaired'
+Plugin 'derekwyatt/vim-scala'
 
 filetype plugin indent on
 autocmd Filetype c,cpp,java,php set cindent
