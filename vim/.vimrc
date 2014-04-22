@@ -11,6 +11,7 @@ Plugin 'sprsquish/thrift.vim'
 Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
+Plugin 'file:///Users/ema/src/vim-plugins/twitter-cgit'
 
 filetype plugin indent on
 syntax on
