@@ -4,6 +4,7 @@ filetype off
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 
+Plugin 'gmarik/vundle'
 Plugin 'sprsquish/thrift.vim'
 Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
