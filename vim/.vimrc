@@ -9,6 +9,7 @@ Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'derekwyatt/vim-scala'
+Plugin 'altercation/vim-colors-solarized'
 
 filetype plugin indent on
 autocmd Filetype c,cpp,java,php set cindent
