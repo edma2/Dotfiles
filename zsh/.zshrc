@@ -20,6 +20,9 @@ alias gmm="git merge master"
 alias gs="git status"
 alias gp="git pull"
 
+alias -g L='| less'
+alias -g C='| wc -l'
+
 # cd with no arguments to root if in a git repo
 _git_cd() {
   if [[ "$1" != "" ]]; then
@@ -68,6 +71,7 @@ zstyle ':completion:*' completer _complete _match _approximate
 zstyle ':completion:*:match:*' original only
 zstyle ':completion:*:approximate:*' max-errors 1 numeric
 zstyle ':completion:*' menu select
+zstyle ':completion:*' squeeze-slashes true
 
 autoload -U edit-command-line
 zle -N edit-command-line
