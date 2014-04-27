@@ -1,4 +1,6 @@
-setopt autocd completeinword correct extendedglob extendedhistory incappendhistory interactivecomments nobeep noclobber promptsubst pushdsilent sharehistory
+setopt autocd completeinword correct extendedglob extendedhistory \
+       incappendhistory interactivecomments nobeep noclobber promptsubst \
+       pushdsilent sharehistory
 
 HISTFILE=$HOME/.zsh_history
 SAVEHIST=1000000
