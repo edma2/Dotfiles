@@ -1,4 +1,4 @@
 Use [stow](http://www.gnu.org/software/stow/) to install.
-```Shell
+```shell
 dotfiles% stow --ignore=README.md .
 ```
