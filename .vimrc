@@ -42,6 +42,7 @@ set number
 set wrap
 set hidden
 set noswapfile
+set tags+=.git/tags
 
 au BufRead,BufNewFile *.thrift set filetype=thrift
 au BufRead,BufNewFile *.aurora,*.mesos,BUILD,aurora set filetype=python
