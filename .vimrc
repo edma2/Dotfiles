@@ -53,8 +53,6 @@ let mapleader = "\<Space>"
 
 " Previous buffer
 nnoremap <leader><leader> :b#<cr>
-" Toggle search highlighting
-nnoremap <silent><C-L> :set hlsearch! hlsearch?<CR>
 " Opens a new buffer with the current buffer's path
 nnoremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
 " Git diff
