@@ -8,3 +8,5 @@
 	default = simple
 [init]
 	templatedir = ~/.gitconfig.d
+[diff]
+	renames = true
