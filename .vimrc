@@ -42,6 +42,7 @@ set number
 set wrap
 set hidden
 set noswapfile
+set tags+=.git/tags
 
 au BufRead,BufNewFile *.thrift set filetype=thrift
 au BufRead,BufNewFile *.aurora,*.mesos,BUILD,aurora set filetype=python
@@ -52,8 +53,6 @@ let mapleader = "\<Space>"
 
 " Previous buffer
 nnoremap <leader><leader> :b#<cr>
-" Toggle search highlighting
-nnoremap <silent><C-L> :set hlsearch! hlsearch?<CR>
 " Opens a new buffer with the current buffer's path
 nnoremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
 " Git diff
