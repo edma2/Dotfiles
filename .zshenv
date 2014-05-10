@@ -10,8 +10,8 @@ export RUBY_HEAP_SLOTS_GROWTH_FACTOR=1
 export RUBY_GC_MALLOC_LIMIT=50000000
 export RUBY_HEAP_FREE_MIN=4096
 
-export GOPATH=$HOME/src/go
-export PATH=/usr/local/bin:$PATH:$GOPATH/bin
+export GOPATH=$HOME
+export PATH=/usr/local/bin:$PATH
 
 export CC=/usr/bin/gcc-4.2
 export PGDATA='/opt/twitter/var/postgres'
