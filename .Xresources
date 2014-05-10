@@ -1,4 +1,4 @@
-URxvt*font: xft:Envy Code R:pixelsize=13.5
+URxvt*font: xft:Inconsolata:pixelsize=12
 URxvt*letterSpace: -1
 URxvt*internalBorder: 3
 URxvt.scrollBar: false
