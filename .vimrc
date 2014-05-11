@@ -13,6 +13,7 @@ Plugin 'tpope/vim-fireplace'
 Plugin 'tpope/vim-fugitive'
 Plugin 'tpope/vim-unimpaired'
 Plugin 'file:///Users/ema/src/vim-plugins/twitter-cgit'
+Plugin 'vim-go', {'pinned': 1}
 
 filetype plugin indent on
 
