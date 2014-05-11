@@ -15,34 +15,41 @@ Plugin 'tpope/vim-unimpaired'
 Plugin 'file:///Users/ema/src/vim-plugins/twitter-cgit'
 
 filetype plugin indent on
+
+" Colorscheme
 syntax on
 color solarized
 set background=dark
-set backspace=indent,eol,start
+
+" Indentation
 set autoindent
-set smartindent
+
+" UI
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
 set showcmd
 set showmode
-set scrolloff=3
 set showmatch
+set scrolloff=3
+set number
+set wrap
+set listchars=tab:>.,trail:.,extends:#,nbsp:.
+set backspace=indent,eol,start
+
+" Completion
 set wildmenu
 set wildignorecase
 set wildignore=*.class
 set wildmode=list:longest,full
-set list
-set listchars=tab:>.,trail:.,extends:#,nbsp:.
+
+" Search
 set incsearch
 set ignorecase
 set smartcase
-set expandtab
-set shiftwidth=2
-set softtabstop=2
-set number
-set wrap
+
 set hidden
 set noswapfile
+
 set tags+=.git/tags
 
 au BufRead,BufNewFile *.thrift set filetype=thrift
@@ -50,17 +57,22 @@ au BufRead,BufNewFile *.aurora,*.mesos,BUILD,aurora set filetype=python
 au BufRead,BufNewFile *.alert set filetype=conf
 au BufRead,BufNewFile Capfile set filetype=ruby
 
+fun! <SID>StripTrailingWhitespaces()
+    let l = line(".")
+    let c = col(".")
+    %s/\s\+$//e
+    call cursor(l, c)
+endfun
+
+autocmd FileType * autocmd BufWritePre <buffer> :call <SID>StripTrailingWhitespaces()
+
 let mapleader = "\<Space>"
 
-" Previous buffer
 nnoremap <leader><leader> :b#<cr>
 " Opens a new buffer with the current buffer's path
 nnoremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
-" Git diff
+
 nnoremap <silent><leader>gd :Git! diff<cr>
-" Git status
 nnoremap <silent><leader>gs :Gstatus<cr>
-" Git grep
 nnoremap <leader>gg :Ggrep<space>
-" Git blame
 nnoremap <silent><leader>gb :Gblame<cr>
