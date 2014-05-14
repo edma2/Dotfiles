@@ -31,9 +31,11 @@ set showmode
 set showmatch
 set scrolloff=3
 set number
+set relativenumber
 set wrap
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
 set backspace=indent,eol,start
+set timeoutlen=1000 ttimeoutlen=0
 
 " Completion
 set wildmenu
