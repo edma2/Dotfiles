@@ -11,7 +11,7 @@ xset -b
 xset +fp /usr/share/fonts/local
 xset fp rehash
 
-feh --bg-fill $HOME/pics/stars.jpg
+feh --bg-fill ~/pics/asoiaf.jpg
 
 wmname LG3D
 
