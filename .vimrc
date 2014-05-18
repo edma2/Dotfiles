@@ -33,7 +33,6 @@ set showmode
 set showmatch
 set scrolloff=3
 set number
-set relativenumber
 set wrap
 set listchars=tab:>.,trail:.,extends:#,nbsp:.
 set backspace=indent,eol,start
