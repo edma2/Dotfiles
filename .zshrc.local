@@ -1,6 +1,9 @@
 jcurl() { curl -s $@ | jsonpp }
 jtwurl() { twurl $@ | jsonpp }
 
+# 10ms for key sequences
+KEYTIMEOUT=1
+
 stitch() {
   pushd $BIRDCAGE
   if [ -z "`nc -z localhost 2181`" ]; then
