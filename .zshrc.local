@@ -1,2 +1,13 @@
 jcurl() { curl -s $@ | jsonpp }
 jtwurl() { twurl $@ | jsonpp }
+
+stitch() {
+  pushd $BIRDCAGE
+  if [ -z "`nc -z localhost 2181`" ]; then
+    ssh -fN -L2181:sdzookeeper.smf1.twitter.com:2181 -D 50001 nest1
+  fi
+  ./pants goal repl \
+    --scala-repl-jvmargs='-DsocksProxyHost=localhost -DsocksProxyPort=50001 -Dcom.twitter.localZk=localhost:2181' \
+    stitch::
+  popd
+}
