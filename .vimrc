@@ -1,36 +1,40 @@
 execute pathogen#infect()
-syntax on
+
 filetype plugin indent on
 
+syntax on
 color solarized
 
-set autoindent
-set background=dark
-set backspace=indent,eol,start
-set expandtab
-set hidden
-set ignorecase
-set incsearch
-set listchars=tab:>.,trail:.,extends:#,nbsp:.
 set nocompatible
-set noswapfile
+set backspace=indent,eol,start
+set autoindent
+
+set ttimeout
+set ttimeoutlen=100
+
+set listchars=tab:>.,trail:.,extends:#,nbsp:.
 set number
+
 set ruler
 set rulerformat=%30(%=\:b%n%y%m%r%w\ %l,%c%V\ %P%)
-set scrolloff=3
-set shiftwidth=2
+
+set laststatus=1
+set statusline=%<%f\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
+
 set showcmd
-set showmatch
 set showmode
-set smartcase
-set softtabstop=2
-set tags+=.git/tags
-set timeoutlen=1000 ttimeoutlen=0
-set wildignore=*.class
-set wildignorecase
+set scrolloff=3
+set showmatch
+
 set wildmenu
 set wildmode=list:longest,full
-set wrap
+
+set incsearch
+set hlsearch
+
+set shiftwidth=2
+set softtabstop=2
+set expandtab
 
 au BufRead,BufNewFile *.thrift set filetype=thrift
 au BufRead,BufNewFile *.aurora,*.mesos,BUILD,aurora set filetype=python
@@ -49,6 +53,7 @@ let mapleader = "\<Space>"
 
 nnoremap <leader><leader> :b#<cr>
 nnoremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
+
 nnoremap <silent><leader>gd :Git! diff<cr>
 nnoremap <silent><leader>gs :Gstatus<cr>
 nnoremap <leader>gg :Ggrep<space>
