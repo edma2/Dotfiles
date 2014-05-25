@@ -32,10 +32,17 @@ set wildmode=list:longest,full
 
 set incsearch
 set hlsearch
+"set ignorecase
+"set smartcase
 
 set shiftwidth=2
 set softtabstop=2
 set expandtab
+
+set tags+=.git/tags
+
+set noswapfile
+set hidden
 
 au BufRead,BufNewFile *.thrift set filetype=thrift
 au BufRead,BufNewFile *.aurora,*.mesos,BUILD,aurora set filetype=python
@@ -59,3 +66,5 @@ nnoremap <silent><leader>gd :Git! diff<cr>
 nnoremap <silent><leader>gs :Gstatus<cr>
 nnoremap <leader>gg :Ggrep<space>
 nnoremap <silent><leader>gb :Gblame<cr>
+
+nnoremap <silent> <C-L> :set hlsearch! hlsearch?<CR><C-L>
