@@ -10,6 +10,8 @@ export CLICOLOR=1
 export LSCOLORS=gxGxFxdxbxDxDxBxBxExEx
 export EDITOR=vim
 
+bindkey -e
+
 alias g="git"
 alias gg="git grep"
 alias gc="git checkout"
@@ -75,33 +77,12 @@ zstyle ':completion:*:approximate:*' max-errors 1 numeric
 zstyle ':completion:*' menu select
 zstyle ':completion:*' squeeze-slashes true
 
-autoload -U edit-command-line
-zle -N edit-command-line
-
-bindkey -v
-bindkey "^?" backward-delete-char # allows backspace to delete behind cursor
-bindkey -M viins '^r' history-incremental-search-backward
-bindkey -M viins '^t' history-incremental-search-forward
-bindkey -M vicmd '^r' history-incremental-search-backward
-bindkey -M vicmd '^t' history-incremental-search-forward
-bindkey '^p' push-line
-bindkey ' ' magic-space
-bindkey "^A" beginning-of-line
-bindkey "^E" end-of-line
-bindkey "^W" backward-delete-word
-bindkey "^b" backward-word
-bindkey "^f" forward-word
-bindkey "^d" delete-word
-bindkey "^k" kill-line
-bindkey -M viins "^xe" edit-command-line
-bindkey -M vicmd "^xe" edit-command-line
-
 autoload -U colors && colors
 
 # Remove prompt on line paste
 nbsp=$'\u00A0'
 bindkey -s $nbsp '^u'
-PROMPT='%(?..%?? )%(1j.%j& .)%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
+PROMPT='%(1j.%j& .)%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
 
 _git_head() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
