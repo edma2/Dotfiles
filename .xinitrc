@@ -19,8 +19,7 @@ bat() {
   acpi -b | awk '{print $4}' | tr -d ','
 }
 
-while xsetroot -name "`date` `bat`"
-do
+while xsetroot -name "`date` `bat` `uptime | sed 's/.*,//'`"; do
   sleep 1
 done &
 exec dwm
