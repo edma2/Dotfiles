@@ -10,7 +10,9 @@ export CLICOLOR=1
 export LSCOLORS=gxGxFxdxbxDxDxBxBxExEx
 export EDITOR=vim
 
-bindkey -e
+bindkey -v
+bindkey '\e[3~' delete-char
+bindkey '^R' history-incremental-search-backward
 
 alias g="git"
 alias gg="git grep"
