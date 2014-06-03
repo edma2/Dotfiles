@@ -4,6 +4,10 @@ syntax on
 filetype plugin indent on
 color solarized
 
+au BufRead,BufNewFile *.thrift set filetype=thrift
+au BufRead,BufNewFile *.aurora,*.mesos,BUILD,aurora set filetype=python
+au BufRead,BufNewFile *.alert set filetype=conf
+
 set number
 set hlsearch
 set statusline=%<%f\ %y\ %h%m%r%{fugitive#statusline()}%=%-14.(%l,%c%V%)\ %P
