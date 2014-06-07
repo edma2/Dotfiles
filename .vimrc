@@ -22,6 +22,7 @@ set softtabstop=2
 set noswapfile
 set hidden
 set tags+=.git/tags
+set path=**
 
 " Mappings
 let mapleader = "\<Space>"
