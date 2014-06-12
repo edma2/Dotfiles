@@ -13,6 +13,7 @@ export EDITOR=vim
 bindkey -v
 bindkey '\e[3~' delete-char
 bindkey '^R' history-incremental-search-backward
+bindkey '^p' push-line
 
 alias g="git"
 alias gg="git grep"
