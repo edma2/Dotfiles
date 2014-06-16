@@ -1,0 +1,2 @@
+#!/bin/bash
+surfraw -g google define $1
