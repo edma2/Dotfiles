@@ -85,7 +85,7 @@ autoload -U colors && colors
 # Remove prompt on line paste
 nbsp=$'\u00A0'
 bindkey -s $nbsp '^u'
-PROMPT='%(1j.%j& .)%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
+PROMPT='%m%F{black}:%f%(1j.%j& .)%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
 
 _git_head() {
   ref=$(git symbolic-ref HEAD 2> /dev/null) || return
