@@ -11,15 +11,13 @@ xset -b
 xset +fp /usr/share/fonts/local
 xset fp rehash
 
-feh --bg-fill ~/pics/bebop2.jpg
-
 wmname LG3D
 
 bat() {
   acpi -b | awk '{print $4}' | tr -d ','
 }
 
-while xsetroot -name "`date` `bat` `uptime | sed 's/.*,//'`"; do
+while xsetroot -name "`netctl-auto current` `bat` `date`"; do
   sleep 1
 done &
 exec dwm
