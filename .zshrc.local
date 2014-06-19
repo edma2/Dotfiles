@@ -22,6 +22,7 @@ alias -s png=feh
 alias -s jpg=feh
 alias -s gz=tar\ -xzvf
 alias -s bz2=tar\ -xjvf
+alias -s xs=tar\ -xzvf
 alias -s zip=unzip
 
 eval $(keychain --eval --quick --quiet id_rsa E5A9F109)
