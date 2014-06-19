@@ -82,15 +82,44 @@ zstyle ':completion:*' squeeze-slashes true
 
 autoload -U colors && colors
 
-# Remove prompt on line paste
-nbsp=$'\u00A0'
-bindkey -s $nbsp '^u'
-PROMPT='%m%F{black}:%f%(1j.%j& .)%c%F{black}/%f%b$(_git_head) %(?.%F{green}.%F{red})%#%f$nbsp'
+# Prompt: stolen from http://chneukirchen.org/dotfiles/.zshrc
 
-_git_head() {
-  ref=$(git symbolic-ref HEAD 2> /dev/null) || return
-  echo "%F{blue}${ref#refs/heads/}%f"
+# gitpwd - print %~, limited to $NDIR segments, with inline git branch
+NDIRS=2
+gitpwd() {
+  local -a segs splitprefix; local prefix branch
+  segs=("${(Oas:/:)${(D)PWD}}")
+
+  if gitprefix=$(git rev-parse --show-prefix 2>/dev/null); then
+    splitprefix=("${(s:/:)gitprefix}")
+    if ! branch=$(git symbolic-ref -q --short HEAD); then
+      branch=$(git name-rev --name-only HEAD 2>/dev/null)
+      [[ $branch = *\~* ]] || branch+="~0"    # distinguish detached HEAD
+    fi
+    if (( $#splitprefix > NDIRS )); then
+      print -n "${segs[$#splitprefix]}@$branch "
+    else
+      segs[$#splitprefix]+=@$branch
+    fi
+  fi
+
+  print "${(j:/:)${(@Oa)segs[1,NDIRS]}}"
 }
+
+cnprompt6() {
+  case "$TERM" in
+    xterm*|rxvt*)
+      precmd() {  print -Pn "\e]0;%m: %~\a" }
+      preexec() { printf "\e]0;$HOST: %s\a" $1 };;
+  esac
+  setopt PROMPT_SUBST
+  nbsp=$'\u00A0'
+  bindkey -s $nbsp '^u'
+  PS1='%B%m%(?.. %??)%(1j. %j&.)%b $(gitpwd)%B%(!.%F{red}.%F{yellow})%#${SSH_CLIENT:+%#}$nbsp%b'
+  RPROMPT=''
+}
+
+cnprompt6
 
 if [[ -f $HOME/.zshrc.local ]]; then
   . $HOME/.zshrc.local
