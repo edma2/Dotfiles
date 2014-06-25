@@ -1,4 +1,8 @@
 #!/bin/sh
+
+# Kill any existing processes.
+kill `pgrep ctags` 2> /dev/null
+
 set -e
 PATH="/usr/local/bin:$PATH"
 trap "rm -f .git/tags.$$" EXIT
