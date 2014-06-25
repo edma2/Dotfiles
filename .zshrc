@@ -115,7 +115,7 @@ cnprompt6() {
   setopt PROMPT_SUBST
   nbsp=$'\u00A0'
   bindkey -s $nbsp '^u'
-  PS1='%B%m%(?.. %??)%(1j. %j&.)%b $(gitpwd)%B%(!.%F{red}.%F{yellow})%#${SSH_CLIENT:+%#}$nbsp%b'
+  PS1='${SSH_CLIENT:+%B%m%b:}%(?..%F{red}%??%f )%(1j.%F{green}%j&%f .)$(gitpwd)%B%(!.%F{red}.%F{yellow})%b \$$nbsp%b%f'
   RPROMPT=''
 }
 
