@@ -21,12 +21,10 @@ set shiftwidth=2
 set softtabstop=2
 set noswapfile
 set hidden
-set tags+=.git/tags
+set tags+=.git/tags,~/src/science/.git/tags.thrift
 set path=**
 
 " Mappings
 let mapleader = "\<Space>"
 nnoremap <leader><leader> :b#<cr>
 nnoremap <leader>e :edit <c-r>=expand("%:p:h")<cr>/
-nnoremap <silent><leader>gs :Gstatus<cr>
-nnoremap <silent><leader>gb :Gblame<cr>
