@@ -11,16 +11,21 @@ export RUBY_GC_MALLOC_LIMIT=50000000
 export RUBY_HEAP_FREE_MIN=4096
 
 export GOPATH=$HOME
-export PATH=/usr/local/bin:$PATH
 
 export CC=/usr/bin/gcc-4.2
 export PGDATA='/opt/twitter/var/postgres'
 export MAVEN_OPTS="-Xmx1024m -XX:MaxPermSize=512m"
 
-export PATH=$BIRDCAGE/bin:$BIRDCAGE/.scala/scala-2.9.2/bin:$PATH
-export PATH=$HOME/src/maven-tools/bin:$PATH
-export PATH=/opt/twitter/sbin:$HOME:/opt/twitter/bin:${HOME}/.twitools/src/twitter-utilities/sbt:$PATH
-export PATH=$HOME/bin:$PATH
+PATH=/usr/local/bin:$PATH
+PATH=$BIRDCAGE/bin:$BIRDCAGE/.scala/scala-2.9.2/bin:$PATH
+PATH=$HOME/src/maven-tools/bin:$PATH
+PATH=/opt/twitter/sbin:$HOME:/opt/twitter/bin:${HOME}/.twitools/src/twitter-utilities/sbt:$PATH
+PATH=$HOME/bin:$PATH
+# MacPorts
+PATH=/opt/local/bin:/opt/local/sbin:$PATH
+export MANPATH=/opt/local/share/man:$MANPATH
+
+export PATH
 
 export JAVA_HOME=$(/usr/libexec/java_home)
 
